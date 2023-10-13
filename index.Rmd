@@ -11,4 +11,22 @@ output:
 
 ## Project thoughts
 
-I'm interested in exploring data related to Rotten Tomatoes Movie Reviews. By looking at the number rating, positive or negative language used, and "validity" of critic, I want to see how these variables influence people's decisions to watch that movie. I would measure this through ticket sales or number of viewers. 
+I'm interested in exploring data related to Formula 1 Drivers. By looking at the technology and innovation of Formula 1 cars and integrated machine learning strategies, I want to see how driver's careers are impacted both in terms of success and longevity. I would measure this through car performance and driver performance statistics over a period of time. 
+
+
+## Proposal
+Does the car or driver matter more in Formula 1? In this study I plan to examine how the role of technology and innovation in Formula 1 impacts driver performance and longevity. Furthermore, I want to analyze the relationship between different technological advancements and the trajectory of drivers' careers in terms of both success and length of career. I hypothesize that while drivers with much more technologically advanced cars than their competition will perform better, the amount of experience will play a bigger role when the car technology margins are smaller. In other words, while advancements in car performance will increase both the success rate and longevity of F1 drivers overall, the influence of technological changes on driver performance will vary depending on a driver's experience and skill. This hypothesis is rooted in the theory that technology and innovation have a profound impact on the outcomes in motorsports. Advancements in car performance can lead to better speed, handling, safety, and reliability. Consequently, drivers benefit from improved machinery, which can enhance their performance and extend their careers. My explanatory variable of interest is "Technological Advancements in Car Performance" which I will measure by assessing technological changes in Formula 1 cars over time. These changes may include improvements in engine power, aerodynamics, materials, safety features, and onboard systems. To study this variable, I will examine historical records, technical specifications, and innovations introduced by F1 teams. My outcome variable of interest is "Driver Success Rate and Longevity" which I will measure by evaluating a driver's performance in terms of race results, points earned, wins, podium finishes, and the duration of their career in Formula 1. To study this variable, I will look at data on driver performance, career achievements, and historical race statistics. There are two main patterns that if observed in the data would support my hypothesis. The first is if the data reveals a positive and statistically significant correlation between technological advancements in car performance and driver success rates (e.g., more wins and podium finishes). The second would be if the data demonstrates that drivers in eras with significant technological innovations tend to have longer and more successful careers. However, my hypothesis could be disproven if there is no significant correlation between technological advancements in car performance and driver success rates or if the data indicates that experienced and less-experienced drivers are equally affected by technological changes, without significant variations in their performance.
+
+```{r}
+library(tidyverse)
+f1 <- read_csv("archive (1)/status.csv")
+f1
+
+f1_drivers <- read_csv("formula1-dataset-master/formula1_data_races.csv")
+f1_drivers
+
+F1D <- read_csv("F1Drivers_Dataset.csv")
+F1D
+```
+
+

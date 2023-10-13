@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.25/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["archive (1)/circuits.csv","archive (1)/constructor_results.csv","archive (1)/constructor_standings.csv","archive (1)/constructors.csv","archive (1)/driver_standings.csv","archive (1)/drivers.csv","archive (1)/lap_times.csv","archive (1)/pit_stops.csv","archive (1)/qualifying.csv","archive (1)/races.csv","archive (1)/results.csv","archive (1)/seasons.csv","archive (1)/sprint_results.csv","archive (1)/status.csv","F1Drivers_Dataset.csv","formula1-dataset-master/extractor.py","formula1-dataset-master/formula1_data_races.csv","formula1-dataset-master/Pipfile","formula1-dataset-master/Pipfile.lock","formula1-dataset-master/README.md","formula1-dataset-master/requirements.txt","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.17/header-attrs.js","index_files/header-attrs-2.25/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js","Marvel.csv"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1518,8 +1518,74 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 <div class="d-article">
 <h2 id="project-thoughts">Project thoughts</h2>
-<p>I’m interested in exploring data related to Rotten Tomatoes Movie Reviews. By looking at the number rating, positive or negative language used, and “validity” of critic, I want to see how these variables influence people’s decisions to watch that movie. I would measure this through ticket sales or number of viewers.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<p>I’m interested in exploring data related to Formula 1 Drivers. By looking at the technology and innovation of Formula 1 cars and integrated machine learning strategies, I want to see how driver’s careers are impacted both in terms of success and longevity. I would measure this through car performance and driver performance statistics over a period of time.</p>
+<h2 id="proposal">Proposal</h2>
+<p>Does the car or driver matter more in Formula 1? In this study I plan to examine how the role of technology and innovation in Formula 1 impacts driver performance and longevity. Furthermore, I want to analyze the relationship between different technological advancements and the trajectory of drivers’ careers in terms of both success and length of career. I hypothesize that while drivers with much more technologically advanced cars than their competition will perform better, the amount of experience will play a bigger role when the car technology margins are smaller. In other words, while advancements in car performance will increase both the success rate and longevity of F1 drivers overall, the influence of technological changes on driver performance will vary depending on a driver’s experience and skill. This hypothesis is rooted in the theory that technology and innovation have a profound impact on the outcomes in motorsports. Advancements in car performance can lead to better speed, handling, safety, and reliability. Consequently, drivers benefit from improved machinery, which can enhance their performance and extend their careers. My explanatory variable of interest is “Technological Advancements in Car Performance” which I will measure by assessing technological changes in Formula 1 cars over time. These changes may include improvements in engine power, aerodynamics, materials, safety features, and onboard systems. To study this variable, I will examine historical records, technical specifications, and innovations introduced by F1 teams. My outcome variable of interest is “Driver Success Rate and Longevity” which I will measure by evaluating a driver’s performance in terms of race results, points earned, wins, podium finishes, and the duration of their career in Formula 1. To study this variable, I will look at data on driver performance, career achievements, and historical race statistics. There are two main patterns that if observed in the data would support my hypothesis. The first is if the data reveals a positive and statistically significant correlation between technological advancements in car performance and driver success rates (e.g., more wins and podium finishes). The second would be if the data demonstrates that drivers in eras with significant technological innovations tend to have longer and more successful careers. However, my hypothesis could be disproven if there is no significant correlation between technological advancements in car performance and driver success rates or if the data indicates that experienced and less-experienced drivers are equally affected by technological changes, without significant variations in their performance.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='va'>f1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"archive (1)/status.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>f1</span></span></code></pre>
+</div>
+<pre><code># A tibble: 139 × 2
+   statusId status      
+      &lt;dbl&gt; &lt;chr&gt;       
+ 1        1 Finished    
+ 2        2 Disqualified
+ 3        3 Accident    
+ 4        4 Collision   
+ 5        5 Engine      
+ 6        6 Gearbox     
+ 7        7 Transmission
+ 8        8 Clutch      
+ 9        9 Hydraulics  
+10       10 Electrical  
+# ℹ 129 more rows</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>f1_drivers</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"formula1-dataset-master/formula1_data_races.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>f1_drivers</span></span></code></pre>
+</div>
+<pre><code># A tibble: 23,175 × 10
+   position number driver    car    laps time  points grand_prix  year
+   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+ 1 1            44 Lewis  H… Merc…    56 1:32…     25 BAHRAIN     2021
+ 2 2            33 Max  Ver… Red …    56 +0.7…     18 BAHRAIN     2021
+ 3 3            77 Valtteri… Merc…    56 +37.…     16 BAHRAIN     2021
+ 4 4             4 Lando  N… McLa…    56 +46.…     12 BAHRAIN     2021
+ 5 5            11 Sergio  … Red …    56 +52.…     10 BAHRAIN     2021
+ 6 6            16 Charles … Ferr…    56 +59.…      8 BAHRAIN     2021
+ 7 7             3 Daniel  … McLa…    56 +66.…      6 BAHRAIN     2021
+ 8 8            55 Carlos  … Ferr…    56 +67.…      4 BAHRAIN     2021
+ 9 9            22 Yuki  Ts… Alph…    56 +85.…      2 BAHRAIN     2021
+10 10           18 Lance  S… Asto…    56 +86.…      1 BAHRAIN     2021
+# ℹ 23,165 more rows
+# ℹ 1 more variable: fastest_lap &lt;chr&gt;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>F1D</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"F1Drivers_Dataset.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>F1D</span></span></code></pre>
+</div>
+<pre><code># A tibble: 868 × 22
+   Driver   Nationality Seasons Championships Race_Entries Race_Starts
+   &lt;chr&gt;    &lt;chr&gt;       &lt;chr&gt;           &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+ 1 Carlo A… Italy       [1962,…             0            3           0
+ 2 George … United Kin… [1951,…             0            2           2
+ 3 Kenny A… United Kin… [1983,…             0           10           3
+ 4 Andrea … Italy       [1968,…             0           36          30
+ 5 Philipp… Belgium     [1994]              0            2           2
+ 6 Walt Ad… United Sta… [1950]              0            1           1
+ 7 Kurt Ad… West Germa… [1953]              0            1           1
+ 8 Fred Ag… United Sta… [1950,…             0            9           8
+ 9 Kurt Ah… West Germa… [1966,…             0            4           4
+10 Jack Ai… United Kin… [2020]              0            1           1
+# ℹ 858 more rows
+# ℹ 16 more variables: Pole_Positions &lt;dbl&gt;, Race_Wins &lt;dbl&gt;,
+#   Podiums &lt;dbl&gt;, Fastest_Laps &lt;dbl&gt;, Points &lt;dbl&gt;, Active &lt;lgl&gt;,
+#   `Championship Years` &lt;chr&gt;, Decade &lt;dbl&gt;, Pole_Rate &lt;dbl&gt;,
+#   Start_Rate &lt;dbl&gt;, Win_Rate &lt;dbl&gt;, Podium_Rate &lt;dbl&gt;,
+#   FastLap_Rate &lt;dbl&gt;, Points_Per_Entry &lt;dbl&gt;, Years_Active &lt;dbl&gt;,
+#   Champion &lt;lgl&gt;</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>
