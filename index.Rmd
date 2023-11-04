@@ -28,5 +28,17 @@ f1_drivers
 F1D <- read_csv("F1Drivers_Dataset.csv")
 F1D
 ```
+#Part 3
+```{r}
+library(ggplot2)
+F1data <- data.frame(
+  Driver = c("Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel", "Alain Prost", "Ayrton Senna", "Max Verstappen", "Fernando Alonso", "Nigel Mansell", "Jackie Stewart", "Niki Lauda"),
+  Win_Rate = c("0.331189711", "0.295454545", "0.176666667", "0.252475248", "0.253086420", "0.219512195", "0.089136490", "0.162303665", "0.270000000", "0.141242938"),
+  Years_Active = c("16", "19", "16", "13", "11", "8", "19", "15", "9", "13")
+)
 
+ggplot(F1data, aes(x = Years_Active, y = Win_Rate, color = Driver)) +
+  geom_point() +
+  labs(title = "Win Rate vs. Years Active by Driver", x = "Years Active", y = "Win Rate")
+```
 
