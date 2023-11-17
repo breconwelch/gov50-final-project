@@ -1,0 +1,124 @@
+---
+title: "Lecture 22"
+author: "Brecon Welch"
+date: "2023-11-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Social Pressure
+```{r}
+library(tidyverse)
+library(infer)
+data(social, package = "qss")
+social <- as_tibble(social)
+social
+
+social |> count(messages)
+
+```
+
+
+
+#Calculate ATE (sample difference in means)
+```{r}
+social |> 
+  filter(messages %in% c("Control", "Neighbors")) |>
+  group_by(messages) |> 
+  summarize(turnout_prop = mean(primary2006)) |>
+  pivot_wider(names_from = messages, values_from = turnout_prop) |>
+  mutate(ATE = Neighbors - Control)
+```
+when we take the difference between two percentages = percentage point difference NOT percentage difference
+when we take the difference between two numbers relative to the other = percentage difference --> ex. ((A-B)/B) How much we go from B to A divided by B (gives us percentage difference)
+
+
+```{r}
+social <- social |>
+  filter(messages %in% c("Neighbors", "Control")) 
+
+social |>
+  mutate(messages_permute = sample(messages)) |>
+  select(primary2006, messages, messages_permute)
+
+
+social <- social |>
+  mutate(turnout = if_else(primary2006 == 1, "Voted", "Didn't Vote"))
+##create an outcome that is more labelled
+##outcome of interest = turnout var 
+
+est_ate <- social |>
+  specify(turnout ~ messages, success = "Voted") |>
+  calculate(stat = "diff in props", order = c("Neighbors", "Control"))
+```
+#what we are doing here is reshuffling who is in treatment group and control group because there is no treatment effect/outcome difference so it doesn't matter who is in treatment or control
+
+
+
+```{r}
+null_dist <- social |>
+  specify(turnout ~ messages, success = "Voted") |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in props", order = c("Neighbors", "Control"))
+  ##generate data under this null hypothesize
+
+#want diff in pop means to be 0, so null is equal to independent 
+
+null_dist
+  
+```
+#specify what you are interested in
+
+
+```{r}
+null_dist |>
+  visualize()
+```
+difference in proportions between control and treatment groups, we get are between -.5 and .5 percentage points; if there is truly no treatment effect then we should get proportion close to this
+
+
+```{r}
+ate_pval <- null_dist |>
+  get_p_value(obs_stat = est_ate, direction = "both")
+ate_pval
+```
+#not actually 0, just approximately 0
+
+```{r}
+null_dist |>
+  visualize() + 
+  shade_p_value(obs_stat = est_ate, direction = "both")
+```
+
+#calculate ATE in means
+```{r}
+library(gov50data)
+trains <- trains |>
+  mutate(treatment = if_else(treatment == 1, "Treated", "Control"))
+
+trains_ate <- trains |>
+  specify(numberim.post ~ treatment) |>
+  calculate(stat = "diff in means", order = c("Treated", "Control"))
+trains_ate
+```
+#have a difference in means here not a difference in propprtion
+
+
+
+```{r}
+trains_null <- trains |>
+  specify(numberim.post ~ treatment) |>
+  hypothesize(null = "independence") |>
+  generate(reps = 1000, type = "permute") |>
+  calculate(stat = "diff in means", order = c("Treated", "Control"))
+trains_null
+
+trains_null |>
+  visualize()
+```
+#number is between 1-5 insteasd of 0-1 don't have to specify success - vote and have to say diff in means instead of diff in proportion

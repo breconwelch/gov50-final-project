@@ -37,8 +37,32 @@ F1data <- data.frame(
   Years_Active = c("16", "19", "16", "13", "11", "8", "19", "15", "9", "13")
 )
 
+F1data <- F1data |> 
+  mutate(Years_Active = factor(Years_Active, levels=c('8','9','11','13','15','16','19')))
+
+
 ggplot(F1data, aes(x = Years_Active, y = Win_Rate, color = Driver)) +
   geom_point() +
   labs(title = "Win Rate vs. Years Active by Driver", x = "Years Active", y = "Win Rate")
 ```
+
+
+
+
+```{r}
+win <- ggplot(data = F1D,
+       aes(x = Years_Active, y = Win_Rate)) +
+  geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x')  + labs(title = "Win Rate vs. Years Active", x = "Years Active", y = "Win Rate")
+win
+
+podium <- ggplot(data = F1D,
+       aes(x = Years_Active, y = Podium_Rate)) +
+  geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x') + labs(title = "Podium Rate vs. Years Active", x = "Years Active", y = "Podium Rate")
+podium
+
+```
+
+As seen in these two visualizations, more wins and podium placements tend to be occur with a longer F1 career. While a driver has more chances to win or place on the podium if he competes for more years, we can see here that there is a stronger correlation between podium rate and win rate. This could be explained in several different ways. For instance, drivers will improve their driving strategies and skills as they participate in more competitions, which could explain their ability to earn more podium positions as their careers is longer. On the other hand, this increase win and podium rate could be due to technological improvements in the cars themselves enabling the drivers to perform better. While this analysis does not directly look at technological improvements, it is a helpful starting point to better understand the main differences in F1 career performances and longevity. With more analysis of confounding variables, I hope to discover the reasoning behind this correlation in order to give insight into whether the car or driver matters more for F1. 
+
+
 
