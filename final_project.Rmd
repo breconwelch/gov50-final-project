@@ -19,7 +19,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-
 ```{r}
 library(tidyverse)
 f1 <- read_csv("archive (1)/status.csv")
@@ -36,7 +35,7 @@ drivers <- read_csv("drivers.csv")
 results <- read_csv("results.csv.zip")
 ```
 
-
+##Plots
 ```{r}
 library(ggplot2)
 F1data <- data.frame(
@@ -48,7 +47,6 @@ ggplot(F1data, aes(x = Nationality, y = Win_Rate, color = name)) +
   geom_point() +
   labs(title = "Nationality vs. Win Rate for top 10 Drivers", x = "Nationality", y = "Win Rate")
 ```
-
 
 ```{r}
 win <- ggplot(data = F1D,
@@ -68,7 +66,7 @@ years
 ```
 
 
-
+##Regression
 ```{r}
 library(modelsummary)
 
