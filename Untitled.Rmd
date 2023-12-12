@@ -1,0 +1,105 @@
+---
+title: "Gov Project"
+author: "Brecon Welch"
+date: "2023-12-12"
+output: html_document
+---
+
+---
+title: "Project"
+author: "Brecon Welch"
+date: "2023-12-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+f1 <- read_csv("archive (1)/status.csv")
+f1
+
+f1_drivers <- read_csv("formula1-dataset-master/formula1_data_races.csv")
+f1_drivers
+
+F1D <- read_csv("F1Drivers_Dataset.csv")
+F1D
+
+races <- read_csv("races.csv")
+drivers <- read_csv("drivers.csv")
+results <- read_csv("results.csv.zip")
+```
+
+
+```{r}
+library(ggplot2)
+F1data <- data.frame(
+  name = c("Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel", "Alain Prost", "Ayrton Senna", "Max Verstappen", "Fernando Alonso", "Nigel Mansell", "Jackie Stewart", "Niki Lauda"),
+  Win_Rate = c("0.331189711", "0.295454545", "0.176666667", "0.252475248", "0.253086420", "0.219512195", "0.089136490", "0.162303665", "0.270000000", "0.141242938"),
+  Nationality = c("United Kingdom", "Germany", "Germany", "France", "Brazil", "Netherlands", "Spain", "United Kingdom", "United Kingdom", "Austria"))
+
+ggplot(F1data, aes(x = Nationality, y = Win_Rate, color = name)) +
+  geom_point() +
+  labs(title = "Nationality vs. Win Rate for top 10 Drivers", x = "Nationality", y = "Win Rate")
+```
+
+
+```{r}
+win <- ggplot(data = F1D,
+       aes(x = Nationality, y = Win_Rate)) +
+  geom_point() + labs(title = "Nationality vs. Win Rate", x = "Nationality", y = "Win Rate") + theme(axis.text.x = element_text(angle = 90)) 
+win
+
+podium <- ggplot(data = F1D,
+       aes(x = Nationality, y = Podium_Rate)) +
+  geom_point() + labs(title = "Nationality vs Podium Rate", x = "Nationality", y = "Podium_Rate") + theme(axis.text.x = element_text(angle = 90)) 
+podium
+
+years <- ggplot(data = F1D,
+       aes(x = Nationality, y = Years_Active)) +
+  geom_point() + labs(title = "Nationality vs. Years Active", x = "Nationality", y = "Years Active") + theme(axis.text.x = element_text(angle = 90)) 
+years
+```
+
+
+
+```{r}
+library(modelsummary)
+
+Fit <- lm(Win_Rate ~ Nationality + FastLap_Rate + Decade + Podium_Rate + Years_Active, data = F1D)
+
+var_labels <- c(
+"(Intercept)" = "Intercept",
+"Win_Rate" = "Win Rate",
+"Nationality" = "Nationality ",
+"FastLap_Rate" = "Fasted Lap Rate",
+"Decade" = "Decade of Racing",
+"Podium_Rate" = "Podium Rate",
+"Years_Active" = "Years Active"
+)
+
+
+modelsummary::modelsummary(Fit,
+                           statistic = c("s.e. = {std.error}",
+                                         "p = {p.value}"),
+                           gof_map = c("nobs", "r.squared", "adj.r.squared"))
+
+```
+
+
+  My research question investigates whether nationality has a significant impact on Formula 1 drivers’ win rate, controlling for variables such as Podium rate, fastest lap rate, years active, and the decade of competition. I hypothesize that even after accounting for these control factors, nationality may still influence how much a driver wins. This is because certain countries may have a stronger tradition, infrastructure, or support system for motorsports, contributing to the success of drivers from those nations. Furthermore, the availability of financial support and sponsorships for drivers, cultural attitudes toward risk-taking and competitiveness, and fan support vary per country, and thus have an impact. The explanatory variable is Nationality which is a categorical variable representing the country of origin of each Formula 1 driver. The outcome variable of interest is Win Rate. Win Rate is a continuous variable that measures the percentage of races a driver has won out of the total races they have participated in. 
+  My hypothesis would be supported if there is a statistically significant correlation between nationality and win rate with drivers from certain countries consistently exhibiting higher win rates compared to drivers from other countries. For instance, if drivers from a specific country consistently win a higher percentage of races, it suggests that nationality is a relevant factor in predicting win rates. However, if the difference in these variables is negligible, this would suggest that nationality alone may not be a significant predictor of Formula 1 drivers' win rates, and other factors might play a more influential role. Understanding this potential impact is crucial for unraveling the complexities that contribute to success in Formula 1. It can provide insights into whether certain nationalities have a consistent advantage or disadvantage, guiding teams in their strategic decisions.
+  The dataset I chose encompasses information on win rate, podium rate, fastest lap rate, decade, years active, and nationality of Formula 1 drivers. Podium Rate measures the percentage of races a dirver has placed first, second, or third in out of the total races they have participated in. Fastest Lap Rate is defined as the frequency at which a driver achieves the fastest lap during a race or a specified time period. Decade refers to the decade in which the driver participated in races. The Years Active variable shows how long a driver has been racing in Formula 1. A plot visualizing the main outcome of interest, the distribution of win rates across different nationalities, offers an initial exploration. This plot serves as a visual guide to understanding potential variations in win rates among drivers from different countries.
+  According to the plot, three out of the top ten most winning Formula 1 drivers originate from the United Kingdom and two out of the top ten are from Germany. With two countries making up the nationality of half of the most successful drivers, it is rational to continue to explore the relationship between nationality and win rate to see if there is indeed a correlation between the two variables. However, this plot is limiting in that it only visualizes ten drivers. On one hand, looking at a larger pool of drivers could show more correlation between win rate and nationality if the same nationalities show up repeataedly at the top of the ranks. On the other hand, however, more data may show that this finding for the top 10 winningest drivers was merely a coincidence and that many of the top drivers are from different countries.
+  With further analysis comparing nationality with years active, podium rate, and win rate for all the drivers in the dataset, we can see that there are certain countries that win more often, place on the podium more freqeuently, and have longer careers. For podium and win rates these countries included, the United States, United Kingdom, Italy, France, and Germany. These countries in addition to Australia, Austria, Brazil, and West Germany were shown to have more drivers with longer careers compared to the other included countries. 
+  While this analysis provides helpful insight, the main analysis involves a regression model examining the relationship between win rate and nationality, controlling for podium rate, fastest lap time, fastest lap speed, and decade. The regression output and accompanying plot illustrate the significance and direction of the relationship between nationality and win rate. Interpretation of the main coefficient of interest assesses whether nationality has a statistically significant impact on win rate after considering the control variables. Moreover, the coefficients associated with each level of the nationality variable indicate how much the win rate is expected to change for drivers from those countries compared to the reference category, while controlling for the other variables in the model. After running the regression, we get an average regression cofficient of 0.0035 for the 46 different nationalities included in the dataset.
+  The coefficient for nationality represents the estimated change in win rate associated with being from a specific country compared to the reference category (Argentina) while keeping the other variables constant. This means that holding all other variables constant, the estimated change in win rate for a one-unit change in Nationality from 0 to 1 is 0.0035, on average. From the data, we can see that the Netherlands had the highest coefficient (0.012). Since the reference category is Argentina and the coefficient for the Netherlands in the regression model is 0.012, this means that drivers from the Netherlands, on average, have a Win Rate that is 0.012 higher than drivers from Argentina, holding other variables constant. So, while from this data it seems that drivers from the Netherlands tend to have a slightly higher Win Rate compared to drivers from Argentina, it is important to look at the p-value to determine whether these results are stastitically significant. Since p = 0.748 and is greater than the siginificance level 0.05, this suggests that there is no strong evidence the nationality of the driver has a significant impact on their win rate. Thus, I believe that this coefficient does not represent a causal effect.  
+  The regression analysis aimed to explore the impact of nationality on Formula 1 drivers' win rates while controlling for other relevant factors. The results reveal that the coefficient for nationality is not statistically significant (p > 0.05), suggesting that, within the context of this model and dataset, there is no strong evidence to support the hypothesis that nationality has a significant impact on win rates. The lack of statistical significance implies that, after accounting for variables like Fast Lap Rate, Decade, Podium Rate, and Years Active, Nationality alone does not appear to be a significant predictor of win rates for Formula 1 drivers. 
+  A possible limitation could be that the analysis's generalizability might be limited if the sample does not adequately represent the entire population of Formula 1 drivers. While this dataset provides an extensive list of drivers and nationalities, more races have taken place and more drivers have begun racing in Formula 1 since the creation of the dataset. All of this new data could have an impact on future analysis of nationality and win rate, establishing a relationship that is not shown in the present analysis. There are also many confounding variables that have not been accounted for such as team dynamics, car performance, or individual skill levels that can influence a driver's success rate. Looking at whether certain nationalities tend to drive with certain teams could also provide more insight into the effects of nationality on win rate, and possibly explain some of the aforementioned confounding variables such as team dynamics. 
+  To improve this analysis, I would collect more data so that my data set is up to date with the current racers. Having a larger data set would enhance the study's power, providing more reliable insights into the relationship between nationality and win rates. Along this same trend of a larger data set, including more relevant variables, such as age, team-related factors, car technology, and driver experience, could contribute to a more comprehensive analysis. Additionally, I think it could be interesting to use a Differences-in-Differences (DiD) design rather than a cross-sectional one like in the present study. DiD involves comparing changes in outcomes over time between a treatment group and a control group. In the context of F1, I could identify a group of drivers as the treatment group who experience a change in nationality, such as switching countries, and compare their win rate changes with a control group of drivers who do not experience such changes. This could help control for time-related factors and other unobserved variables that may affect win rates.
+  While my analysis did not find a significant relationship between nationality and win rates, it was an interesting question to explore. Further research with a more extensive dataset and a nuanced approach could provide a deeper understanding of the complex dynamics influencing Formula 1 drivers' success.
+  

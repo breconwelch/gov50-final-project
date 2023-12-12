@@ -27,12 +27,16 @@ f1_drivers
 
 F1D <- read_csv("F1Drivers_Dataset.csv")
 F1D
+
+races <- read_csv("races.csv")
+drivers <- read_csv("drivers.csv")
+results <- read_csv("results.csv.zip")
 ```
 #Part 3
 ```{r}
 library(ggplot2)
 F1data <- data.frame(
-  Driver = c("Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel", "Alain Prost", "Ayrton Senna", "Max Verstappen", "Fernando Alonso", "Nigel Mansell", "Jackie Stewart", "Niki Lauda"),
+  name = c("Lewis Hamilton", "Michael Schumacher", "Sebastian Vettel", "Alain Prost", "Ayrton Senna", "Max Verstappen", "Fernando Alonso", "Nigel Mansell", "Jackie Stewart", "Niki Lauda"),
   Win_Rate = c("0.331189711", "0.295454545", "0.176666667", "0.252475248", "0.253086420", "0.219512195", "0.089136490", "0.162303665", "0.270000000", "0.141242938"),
   Years_Active = c("16", "19", "16", "13", "11", "8", "19", "15", "9", "13")
 )
@@ -41,7 +45,7 @@ F1data <- F1data |>
   mutate(Years_Active = factor(Years_Active, levels=c('8','9','11','13','15','16','19')))
 
 
-ggplot(F1data, aes(x = Years_Active, y = Win_Rate, color = Driver)) +
+ggplot(F1data, aes(x = Years_Active, y = Win_Rate, color = name)) +
   geom_point() +
   labs(title = "Win Rate vs. Years Active by Driver", x = "Years Active", y = "Win Rate")
 ```
@@ -59,10 +63,72 @@ podium <- ggplot(data = F1D,
        aes(x = Years_Active, y = Podium_Rate)) +
   geom_point() + geom_smooth(method = 'loess', formula = 'y ~ x') + labs(title = "Podium Rate vs. Years Active", x = "Years Active", y = "Podium Rate")
 podium
-
 ```
 
 As seen in these two visualizations, more wins and podium placements tend to be occur with a longer F1 career. While a driver has more chances to win or place on the podium if he competes for more years, we can see here that there is a stronger correlation between podium rate and win rate. This could be explained in several different ways. For instance, drivers will improve their driving strategies and skills as they participate in more competitions, which could explain their ability to earn more podium positions as their careers is longer. On the other hand, this increase win and podium rate could be due to technological improvements in the cars themselves enabling the drivers to perform better. While this analysis does not directly look at technological improvements, it is a helpful starting point to better understand the main differences in F1 career performances and longevity. With more analysis of confounding variables, I hope to discover the reasoning behind this correlation in order to give insight into whether the car or driver matters more for F1. 
+
+
+#5
+```{r}
+library(tidyr)
+
+results_agg_total <- inner_join(drivers,results,by = "driverId")
+
+results_agg_total <- inner_join(races,results_agg_total,by = "raceId")
+
+results_agg_total <- results_agg_total |> unite(name, forename, surname, sep=" ")
+
+results_podium_finishers <- results_agg_total |> 
+  filter(position==1|position==2|positionText==3)
+
+mostpodiums <- as.data.frame(sort(table(results_podium_finishers$name), decreasing=TRUE)[1:10])
+
+
+merged_data <- merge(F1data, results_podium_finishers, by = "name")
+merged_data <- merged_data[order(as.Date(merged_data$dob)), ]
+
+pod_plot <- ggplot(merged_data, aes(x = Win_Rate, y = dob, color = name)) +
+  geom_point() + geom_smooth() +
+  labs(title = "Comparison of Top Podium Finishers and Date of Birth",
+      x = "Win Rate",
+       y = "Date of Birth",
+       color = "Driver") + coord_flip() +  theme(axis.text.y = element_text(angle = 0, hjust = 1),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+retirements <- results_agg_total |> filter(positionText=="R") |>
+  mutate(ret = )
+mostrets <- as.data.frame(sort(table(retirements$name), decreasing=TRUE)[1:10])
+
+ret_plot <- ggplot(mostrets, aes (x = Freq, y = Var1)) + geom_point() + labs(x = "Total Retirements", y = "Driver Name", title = "Most Retirements by Driver")
+ret_plot
+
+
+most_retire <- as.data.frame(sort(table(retirements$name), decreasing=TRUE))
+races_total <- as.data.frame(sort(table(results_agg_total$name), decreasing=TRUE))
+freq_retire <- inner_join(most_retire, races_total, by="Var1")
+freq_retire$pct <- freq_retire$Freq.x/freq_retire$Freq.y   
+freq_retire <- arrange(freq_retire, desc(pct))
+
+freq_ret <- filter(freq_retire, Freq.y >= 20)
+
+freq_ret <- slice(freq_ret, 1:10)
+
+freq_plot <- ggplot(freq_ret, aes(x = pct, y = reorder(Var1, pct))) + geom_point() + labs(x = "Total Retirement Percentage", y = "Driver Name", title = "Least Frequent Retirements (20 Or More Races)")
+freq_plot
+
+top_10 <- inner_join(results_podium_finishers,F1data,by = "name")
+top_10$dob <- factor(top_10$dob, levels = unique(sort(top_10$dob)))
+top_plot <- ggplot(top_10, aes(x = dob, y = name)) + geom_point() + labs(x = "Date of Birth", y = "Driver Name", title = "Top 10 Winningest Drivers by Date of Birth") +  theme(axis.text.y = element_text(angle = 0, hjust = 1),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+top_plot
+
+
+Fit <- lm(Win_Rate ~ Nationality + FastLap_Rate + Decade + Podium_Rate + Years_Active, data = F1D) 
+```
+
+
+
+Lewis Hamilton is third on the winning percentage but his retirement percentage is very low that means he is one of the drivers who “finished” lots of races. The greatest of the drivers such as Michael Schumacher, Prost, and Senna had very high retirement percentages in their career.
 
 
 
